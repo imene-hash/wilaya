@@ -24,7 +24,7 @@ export default function LoadingPage() {
       if (!selectedMood) throw new Error("Choisis d'abord une ambiance.");
 
       try {
-        const response = await fetch("/api/generate-itinerary", {
+        const response = await fetch(`${API_BASE_URL}/api/generate-itinerary`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ mood: selectedMood, duration, budget, presetRegion }),

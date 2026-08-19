@@ -1,3 +1,4 @@
+export const API_BASE_URL = "https://wilaya-2sq0.onrender.com"; 
 export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 
 // Generate login URL at runtime so redirect URI reflects the current origin.

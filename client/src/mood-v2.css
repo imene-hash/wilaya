@@ -1,0 +1,336 @@
+/* ============================================================
+   MoodPage v2 — même carnet de route saharien, mise en scène plus moderne.
+   Palette : on reste sur les tokens existants (sable, papier, terracotta,
+   palmier, saffron, aubergine) — seule la mise en page et l'animation évoluent.
+   Layout : tuiles octogonales façon zellige + rail Fennec fixe.
+   Signature : le tracé qui s'anime autour de la tuile choisie.
+   ============================================================ */
+
+.mood-v2 {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(184,86,49,.08), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(216,154,43,.10), transparent 55%),
+    var(--sand);
+  color: var(--ink);
+  font-family: "DM Sans", sans-serif;
+  padding-bottom: 64px;
+}
+
+/* ---------- Topbar ---------- */
+.mv2-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(16px, 4vw, 40px) 8px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.mv2-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 8px 14px;
+  border-radius: 100px;
+  font: 600 12.5px "DM Sans", sans-serif;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.mv2-back:hover { background: var(--paper-deep); transform: translateX(-2px); }
+.mv2-step {
+  font: 700 10.5px "DM Sans", sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+
+/* ---------- Shell : rail compagnon + formulaire ---------- */
+.mv2-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px clamp(16px, 4vw, 40px) 0;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 36px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .mv2-shell { grid-template-columns: 1fr; }
+}
+
+.mv2-companion { position: sticky; top: 24px; }
+@media (max-width: 860px) { .mv2-companion { position: static; order: 2; } }
+
+.mv2-companion-card {
+  background: linear-gradient(165deg, var(--paper), var(--paper-deep));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+.mv2-companion-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(82,47,29,.05) 1px, transparent 0);
+  background-size: 14px 14px;
+  pointer-events: none;
+}
+.mv2-fennec-img {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  max-height: 260px;
+  margin: 0 auto 16px;
+  object-fit: contain;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255,250,242,.5);
+  position: relative;
+  animation: mv2Float 5s ease-in-out infinite;
+}
+@keyframes mv2Float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.mv2-companion-tag {
+  font: 700 10px "DM Sans", sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+  margin-bottom: 6px;
+  position: relative;
+}
+.mv2-companion-quote {
+  font: 500 14px/1.5 "Outfit", sans-serif;
+  color: var(--muted);
+  margin: 0;
+  position: relative;
+}
+
+/* ---------- Form column ---------- */
+.mv2-form { min-width: 0; }
+
+.mv2-hero {
+  padding: 8px 2px 30px;
+  opacity: 0;
+  animation: mv2FadeUp .6s cubic-bezier(.23,1,.32,1) forwards;
+}
+.mv2-eyebrow {
+  display: block;
+  font: 700 11px "DM Sans", sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--palm);
+  margin-bottom: 10px;
+}
+.mv2-title {
+  font: 700 clamp(32px, 5vw, 46px)/1.05 "Outfit", sans-serif;
+  letter-spacing: -.01em;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.mv2-lede {
+  font: 400 15px/1.55 "DM Sans", sans-serif;
+  color: var(--muted);
+  max-width: 46ch;
+  margin: 0;
+}
+
+.mv2-section {
+  padding: 26px 0;
+  border-top: 1px dashed rgba(126,52,38,.2);
+  opacity: 0;
+  animation: mv2FadeUp .6s cubic-bezier(.23,1,.32,1) forwards;
+}
+.mv2-section:nth-of-type(1) { animation-delay: .05s; }
+.mv2-section:nth-of-type(2) { animation-delay: .12s; }
+.mv2-section:nth-of-type(3) { animation-delay: .19s; }
+.mv2-section:first-of-type { border-top: none; }
+@keyframes mv2FadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.mv2-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.mv2-section-head h2 {
+  margin: 0;
+  font: 700 18px "Outfit", sans-serif;
+  color: var(--ink);
+}
+.mv2-picked {
+  font: 600 11.5px "DM Sans", sans-serif;
+  color: var(--palm-dark);
+  background: rgba(20,91,67,.08);
+  border: 1px solid rgba(20,91,67,.22);
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.mv2-picked-amber { color: var(--terracotta-dark); background: rgba(184,86,49,.08); border-color: rgba(184,86,49,.22); }
+
+/* ---------- Mood tiles : octogones façon zellige, tracé animé au choix ---------- */
+.mv2-mood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+@media (max-width: 520px) { .mv2-mood-grid { grid-template-columns: 1fr 1fr; gap: 10px; } }
+
+.mv2-mood-tile {
+  position: relative;
+  text-align: left;
+  background: rgba(255,250,242,.7);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  clip-path: none;
+  padding: 20px 18px 18px;
+  min-height: 148px;
+  cursor: pointer;
+  transition: transform .22s cubic-bezier(.23,1,.32,1), background .2s ease, box-shadow .2s ease, border-color .2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mv2-mood-tile:hover {
+  transform: translateY(-3px);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+.mv2-mood-tile.is-selected {
+  background: var(--paper);
+  border-color: color-mix(in srgb, var(--tile-color, var(--terracotta)) 70%, var(--line));
+  box-shadow: 0 12px 24px rgba(82,47,29,.14), 0 0 0 3px color-mix(in srgb, var(--tile-color, var(--terracotta)) 18%, transparent);
+  transform: translateY(-2px) scale(1.01);
+}
+.mv2-mood-tile.is-selected::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1.5px solid color-mix(in srgb, var(--tile-color, var(--terracotta)) 72%, transparent);
+  border-radius: 18px;
+  animation: mv2SelectGlow .5s ease-out;
+  pointer-events: none;
+}
+
+@keyframes mv2SelectGlow {
+  0% { opacity: 0; transform: scale(.96); }
+  50% { opacity: 1; }
+  100% { opacity: .75; transform: scale(1); }
+}
+
+.mv2-tile-emoji { font-size: 20px; color: var(--tile-color, var(--terracotta)); line-height: 1; }
+.mv2-tile-ar {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-family: "Noto Kufi Arabic", "DM Sans", sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  opacity: .55;
+  direction: rtl;
+}
+.mv2-tile-label { font: 700 15px "Outfit", sans-serif; color: var(--ink); margin-top: 6px; }
+.mv2-tile-desc { font: 400 11.5px/1.4 "DM Sans", sans-serif; color: var(--muted); max-width: 20ch; }
+
+/* ---------- Slider ---------- */
+.mv2-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 100px;
+  background: linear-gradient(to right, var(--terracotta) 0%, var(--terracotta) var(--fill, 0%), rgba(126,52,38,.14) var(--fill, 0%), rgba(126,52,38,.14) 100%);
+  outline: none;
+  margin: 8px 0 10px;
+  transition: background .1s linear;
+}
+.mv2-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 3px solid var(--terracotta);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform .15s ease;
+}
+.mv2-slider::-webkit-slider-thumb:hover { transform: scale(1.12); }
+.mv2-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 3px solid var(--terracotta);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+}
+.mv2-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font: 500 10.5px "DM Sans", sans-serif;
+  color: var(--muted);
+}
+
+/* ---------- Budget tiles ---------- */
+.mv2-budget-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 620px) { .mv2-budget-row { grid-template-columns: 1fr; } }
+
+.mv2-budget-tile {
+  background: rgba(255,250,242,.7);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 16px 14px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+.mv2-budget-tile:hover { transform: translateX(3px); }
+.mv2-budget-tile.is-selected {
+  border-color: var(--palm);
+  background: rgba(20,91,67,.08);
+}
+.mv2-budget-icon { font-size: 16px; color: var(--terracotta); margin-bottom: 2px; }
+.mv2-budget-label { font: 600 13.5px "DM Sans", sans-serif; color: var(--ink); }
+.mv2-budget-hint { font: 400 11px "DM Sans", sans-serif; color: var(--muted); }
+
+/* ---------- CTA ---------- */
+.mv2-actions { padding-top: 30px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.mv2-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--terracotta);
+  color: var(--paper);
+  border: none;
+  padding: 14px 24px;
+  border-radius: 100px;
+  font: 700 14px "DM Sans", sans-serif;
+  cursor: pointer;
+  transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
+  box-shadow: 0 10px 24px rgba(184,86,49,.28);
+}
+.mv2-cta:hover:not(:disabled) { background: var(--terracotta-dark); transform: translateY(-2px); box-shadow: 0 14px 28px rgba(184,86,49,.34); }
+.mv2-cta:disabled { background: var(--paper-deep); color: var(--muted); cursor: not-allowed; box-shadow: none; }
+.mv2-caption { font: 400 11.5px "DM Sans", sans-serif; color: var(--muted); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mv2-mood-tile, .mv2-budget-tile, .mv2-cta, .mv2-back, .mv2-fennec-img { transition: none; animation: none; }
+  .mv2-hero, .mv2-section { animation: none; opacity: 1; }
+}

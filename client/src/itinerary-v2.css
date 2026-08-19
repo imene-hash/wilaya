@@ -1,0 +1,409 @@
+/* ============================================================
+   ItineraryPage v2 — carnet de route saharien, passage cinéma.
+   Signature : un fil de route qui traverse toute la page et dont
+   le repère se déplace physiquement d'étape en étape — la route
+   comme objet continu, pas une pile de cartes indépendantes.
+   Palette et type : tokens existants (index.css). Aucune nouvelle
+   couleur globale ; seule la mise en scène change.
+   ============================================================ */
+
+.itn2 {
+  padding-bottom: 56px;
+  position: relative;
+}
+
+/* ---------- Fil de route : un trait qui suit toute la séquence ---------- */
+.itn2-thread-rail {
+  position: relative;
+  margin: 6px 0 0;
+  height: 3px;
+}
+.itn2-thread-rail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(184, 86, 49, .35) 0 10px,
+    transparent 10px 18px
+  );
+}
+.itn2-thread-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--terracotta), var(--saffron));
+  transition: width .5s cubic-bezier(.23,1,.32,1);
+}
+
+/* ---------- Hero v3 : split éditorial — texte à gauche, carte Fennec + étapes à droite ---------- */
+.itn2-hero {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .itn2-hero { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* -- Colonne gauche : titre éditorial sur le fond papier, pas de panneau plein -- */
+.itn2-hero-main { padding-top: 4px; }
+.itn2-hero-kicker {
+  display: flex; align-items: center; gap: 10px;
+  font: 700 11px "DM Sans", sans-serif;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--terracotta);
+  margin-bottom: 14px;
+}
+.itn2-hero-kicker::before {
+  content: ""; width: 22px; height: 2px;
+  background: var(--terracotta); border-radius: 2px;
+}
+.itn2-hero-main h1 {
+  margin: 0 0 18px;
+  font: 800 clamp(32px, 5.2vw, 52px)/1.02 "Outfit", sans-serif;
+  letter-spacing: -.045em;
+  color: var(--terracotta-dark);
+  max-width: 14ch;
+}
+.itn2-hero-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--terracotta-dark);
+  font: 700 11.5px "DM Sans", sans-serif;
+  letter-spacing: .02em;
+}
+.itn2-hero-pills .hero-pill:first-child {
+  background: var(--terracotta-dark);
+  border-color: var(--terracotta-dark);
+  color: var(--paper);
+}
+
+/* -- Colonne droite : carte distincte, verdict de Fennec + étapes en stepper -- */
+.itn2-hero-card {
+  border-radius: var(--radius-xl);
+  padding: 22px;
+  color: var(--paper);
+  background: linear-gradient(155deg, var(--terracotta-dark), var(--terracotta) 68%, var(--saffron));
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.itn2-hero-card::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("/manus-storage/rihla-story-frame_a6df927a.png") center/cover;
+  opacity: .12; mix-blend-mode: screen; pointer-events: none;
+}
+.itn2-hero-card-inner { position: relative; z-index: 2; }
+
+.hero-verdict-label {
+  font: 700 10px "DM Sans", sans-serif;
+  letter-spacing: .12em; text-transform: uppercase;
+  opacity: .72; margin-bottom: 6px;
+}
+.itn2-hero-card p.verdict-quote {
+  margin: 0 0 20px;
+  font: 700 15px/1.45 "Outfit", sans-serif;
+  letter-spacing: -.01em;
+}
+
+/* -- Stepper vertical du circuit -- */
+.itn2-circuit-stepper { list-style: none; margin: 0; padding: 0; }
+.itn2-circuit-stepper li {
+  position: relative;
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 0 0 16px 4px;
+}
+.itn2-circuit-stepper li:last-child { padding-bottom: 0; }
+.itn2-circuit-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(255,250,242,.4);
+  border: 1.5px solid rgba(255,250,242,.7);
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+}
+.itn2-circuit-stepper li:first-child .itn2-circuit-dot,
+.itn2-circuit-stepper li:last-child .itn2-circuit-dot {
+  background: var(--paper);
+  border-color: var(--paper);
+}
+.itn2-circuit-stepper li:not(:last-child)::before {
+  content: "";
+  position: absolute; left: 8px; top: 12px;
+  width: 1.5px; height: calc(100% - 4px);
+  background: repeating-linear-gradient(180deg, rgba(255,250,242,.5) 0 4px, transparent 4px 8px);
+}
+.itn2-circuit-stop {
+  font: 700 13px "DM Sans", sans-serif;
+  letter-spacing: -.01em;
+}
+.itn2-circuit-stepper li:first-child .itn2-circuit-stop,
+.itn2-circuit-stepper li:last-child .itn2-circuit-stop {
+  font-weight: 800;
+}
+
+/* ---------- Séquence d'étapes : panneau plein cadre, une étape visible ---------- */
+.itn2-step-head {
+  display: flex; align-items: end; justify-content: space-between;
+  gap: 16px; margin: 38px 0 16px;
+}
+.itn2-step-head h2 { margin: 7px 0 0; font: 800 clamp(24px, 5vw, 34px)/1 "Outfit", sans-serif; letter-spacing: -.04em; }
+
+.itn2-stage-count {
+  font: 700 12px "DM Sans", sans-serif;
+  color: var(--muted);
+  letter-spacing: .04em;
+}
+.itn2-stage-count b { color: var(--terracotta-dark); }
+
+.itn2-viewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+}
+
+.itn2-track {
+  display: flex;
+  transition: transform .55s cubic-bezier(.23,1,.32,1);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .itn2-track { transition: none; }
+}
+
+.itn2-panel {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-height: 640px;
+  overflow: hidden;
+  background: var(--panel-plate, linear-gradient(150deg, var(--terracotta-dark), var(--terracotta)));
+}
+@media (min-width: 720px) {
+  .itn2-panel { aspect-ratio: 16 / 9.4; }
+}
+
+/* ---- Couche photo (quand elle existe) ---- */
+.itn2-panel-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scale(1.06);
+  filter: saturate(1.04) contrast(1.02);
+  transition: transform 8s cubic-bezier(.16,1,.3,1);
+}
+.itn2-panel.is-active .itn2-panel-photo { transform: scale(1); }
+
+/* ---- Plaque gravée (fallback, pas de photo réelle pour cette wilaya) ---- */
+.itn2-panel-plate {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.itn2-panel-plate::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: url("/manus-storage/rihla-desert-texture_c0b0676c.png");
+  background-size: 480px auto;
+  opacity: .16;
+  mix-blend-mode: soft-light;
+}
+.itn2-panel-plate-icon {
+  font-size: clamp(120px, 26vw, 260px);
+  line-height: 1;
+  color: rgba(255,250,242,.16);
+  transform: rotate(-6deg);
+  user-select: none;
+}
+.itn2-panel-plate-badge {
+  position: absolute;
+  bottom: 22px; left: 24px;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(43,40,35,.28);
+  border: 1px solid rgba(255,250,242,.22);
+  color: rgba(255,250,242,.82);
+  font: 600 10.5px "DM Sans", sans-serif;
+  letter-spacing: .04em;
+  backdrop-filter: blur(6px);
+}
+
+/* ---- Voile de lecture : lisibilité du texte, quelle que soit la couche du dessous ---- */
+.itn2-panel-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    185deg,
+    rgba(20,17,14,.05) 0%,
+    rgba(20,17,14,.12) 38%,
+    rgba(20,17,14,.62) 78%,
+    rgba(20,17,14,.86) 100%
+  );
+}
+
+/* ---- Tampon de jour : façon tampon de passeport, en haut ---- */
+.itn2-panel-stamp {
+  position: absolute; top: 20px; left: 20px; z-index: 3;
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 8px 13px 8px 10px;
+  border-radius: 999px;
+  background: rgba(255,250,242,.92);
+  color: var(--terracotta-dark);
+  border: 1.5px solid rgba(184,86,49,.4);
+  box-shadow: var(--shadow-soft);
+  transform: rotate(-3deg) scale(.86);
+  opacity: 0;
+  transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .4s ease;
+  transition-delay: .15s;
+}
+.itn2-panel.is-active .itn2-panel-stamp {
+  transform: rotate(-3deg) scale(1);
+  opacity: 1;
+}
+.itn2-panel-stamp-num { font: 800 15px "Outfit", sans-serif; letter-spacing: -.02em; }
+.itn2-panel-stamp-wilaya { font: 700 10px "DM Sans", sans-serif; text-transform: uppercase; letter-spacing: .1em; opacity: .75; }
+
+/* ---- Contenu texte, ancré en bas du panneau ---- */
+.itn2-panel-body {
+  position: absolute; inset: auto 0 0 0; z-index: 3;
+  padding: clamp(18px, 4vw, 34px);
+  color: var(--paper);
+}
+.itn2-panel-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.itn2-panel-tag {
+  padding: 5px 10px; border-radius: 999px;
+  background: rgba(255,250,242,.16); border: 1px solid rgba(255,250,242,.22);
+  font: 700 9.5px "DM Sans", sans-serif; letter-spacing: .06em; text-transform: uppercase;
+}
+.itn2-panel-title {
+  margin: 0 0 8px;
+  font: 800 clamp(26px, 5.6vw, 46px)/.98 "Outfit", sans-serif;
+  letter-spacing: -.045em;
+  max-width: 22ch;
+  text-shadow: 0 6px 26px rgba(0,0,0,.32);
+}
+.itn2-panel-desc {
+  margin: 0 0 16px;
+  max-width: 52ch;
+  font-size: clamp(13px, 1.6vw, 15px);
+  line-height: 1.55;
+  color: rgba(255,250,242,.86);
+}
+.itn2-panel-facts {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 4px;
+}
+.itn2-panel-fact {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 11px; border-radius: 999px;
+  background: rgba(255,250,242,.12); border: 1px solid rgba(255,250,242,.2);
+  font: 600 11.5px "DM Sans", sans-serif;
+}
+.itn2-panel-fact strong { font-weight: 800; }
+
+/* ---------- Volet détail : conseil + Fennec, sous le panneau ---------- */
+.itn2-detail {
+  margin-top: 14px;
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  border: 1px solid rgba(93,72,47,.12);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 22px;
+}
+.itn2-detail-tip {
+  padding: 13px 14px;
+  background: #f8ebd7;
+  border-left: 3px solid var(--saffron);
+  border-radius: 0 13px 13px 0;
+  color: var(--terracotta-dark);
+  font-size: 12.5px; line-height: 1.55;
+}
+.itn2-detail-tip strong {
+  display: block; margin-bottom: 4px;
+  color: var(--terracotta); font-size: 10px;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.itn2-detail-fennec {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 14px;
+  color: var(--muted); font-size: 12px; line-height: 1.45;
+}
+.itn2-detail-fennec .avatar-cutout { width: 42px; height: 42px; flex-shrink: 0; }
+
+/* ---------- Navigation étape ---------- */
+.itn2-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-top: 16px;
+}
+.itn2-nav-arrow {
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); background: var(--paper);
+  border-radius: 50%; color: var(--terracotta-dark);
+  transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+}
+.itn2-nav-arrow:hover:not(:disabled) { transform: translateY(-2px); background: #f1e5d5; box-shadow: var(--shadow-soft); }
+.itn2-nav-arrow:disabled { opacity: .35; }
+
+/* ---------- Piste miniature : vignettes cliquables façon carnet ---------- */
+.itn2-filmstrip {
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 4px 2px;
+  flex: 1;
+}
+.itn2-filmstrip::-webkit-scrollbar { display: none; }
+.itn2-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 52px; height: 52px;
+  border-radius: 13px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: var(--thumb-plate, var(--paper-deep));
+  cursor: pointer;
+  transition: border-color .18s ease, transform .18s ease;
+}
+.itn2-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.itn2-thumb-icon { width: 100%; height: 100%; display: grid; place-items: center; font-size: 20px; color: rgba(255,250,242,.55); }
+.itn2-thumb:hover { transform: translateY(-2px); }
+.itn2-thumb.is-active { border-color: var(--terracotta); }
+.itn2-thumb-day {
+  position: absolute; bottom: 2px; right: 3px;
+  font: 800 8.5px "Outfit", sans-serif;
+  color: var(--paper);
+  text-shadow: 0 1px 3px rgba(0,0,0,.6);
+}
+
+/* ---------- Actions bas de page ---------- */
+.itn2-actions { display: flex; gap: 10px; margin-top: 30px; }
+.itn2-actions > * { flex: 1; }
+
+/* ---------- Entrée / réductions de mouvement ---------- */
+.itn2-panel-body > * { opacity: 0; transform: translateY(10px); animation: itn2Rise .5s cubic-bezier(.23,1,.32,1) forwards; }
+.itn2-panel.is-active .itn2-panel-body > *:nth-child(1) { animation-delay: .08s; }
+.itn2-panel.is-active .itn2-panel-body > *:nth-child(2) { animation-delay: .14s; }
+.itn2-panel.is-active .itn2-panel-body > *:nth-child(3) { animation-delay: .2s; }
+.itn2-panel.is-active .itn2-panel-body > *:nth-child(4) { animation-delay: .26s; }
+@keyframes itn2Rise { to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .itn2-panel-photo, .itn2-panel-stamp, .itn2-panel-body > *, .itn2-thread-fill {
+    transition: none; animation: none; opacity: 1; transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .itn2-hero { padding: 20px; }
+  .itn2-actions { flex-direction: column; }
+  .itn2-detail { padding: 16px 17px; }
+}

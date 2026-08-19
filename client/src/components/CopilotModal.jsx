@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Send, X } from "lucide-react";
 import { ASSETS } from "../lib/wilayaData";
+import { API_BASE_URL } from "../const";
 import "../copilot-modal.css";
 
 const INITIAL_MESSAGES = [

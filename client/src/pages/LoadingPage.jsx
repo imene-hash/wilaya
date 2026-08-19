@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { FennecAvatar } from "../components/RihlaPrimitives";
 import { createItinerary, LOADING_MESSAGES } from "../lib/wilayaData";
 import { useWilaya } from "../contexts/WilayaContext";
+import { API_BASE_URL } from "../const";
 
 export default function LoadingPage() {
   const [, setLocation] = useLocation();

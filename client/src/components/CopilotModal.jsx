@@ -84,7 +84,7 @@ export default function CopilotModal({ isOpen, onClose, itinerary, mood, duratio
     setIsTyping(true);
 
     try {
-      const response = await fetch("/api/copilot-chat", {
+      const response = await fetch(`${API_BASE_URL}/api/copilot-chat`, { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

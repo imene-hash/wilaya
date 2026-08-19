@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { FennecAvatar } from "../components/RihlaPrimitives";
 import { createItinerary, LOADING_MESSAGES } from "../lib/wilayaData";
 import { useWilaya } from "../contexts/WilayaContext";
+import { API_BASE_URL } from "../const";
 
 export default function LoadingPage() {
   const [, setLocation] = useLocation();
@@ -23,7 +24,7 @@ export default function LoadingPage() {
       if (!selectedMood) throw new Error("Choisis d'abord une ambiance.");
 
       try {
-        const response = await fetch("/api/generate-itinerary", {
+        const response = await fetch(`${API_BASE_URL}/api/generate-itinerary`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ mood: selectedMood, duration, budget, presetRegion }),

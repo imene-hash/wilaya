@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Send, X } from "lucide-react";
 import { ASSETS } from "../lib/wilayaData";
+import { API_BASE_URL } from "../const";
 import "../copilot-modal.css";
 
 const INITIAL_MESSAGES = [
@@ -83,7 +84,7 @@ export default function CopilotModal({ isOpen, onClose, itinerary, mood, duratio
     setIsTyping(true);
 
     try {
-      const response = await fetch("/api/copilot-chat", {
+      const response = await fetch(`${API_BASE_URL}/api/copilot-chat`, { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
